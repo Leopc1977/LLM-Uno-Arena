@@ -1,10 +1,10 @@
 import { api } from "./utils/api";
 
 export default async function Home() {
-    const { data } = await api.ollama.get({ query: { api: "llama3.2", prompt: "give me a random number between 1 and 1000, only return the number" } });
-    const { data: d } = await api.baml.get({ query: { prompt: "give me a random number between 1 and 1000, only return the number" } });
+    // const { data } = await api.ollama.get({ query: { api: "llama3.2", prompt: "give me a random number between 1 and 1000, only return the number" } });
+    // const { data: d } = await api.baml.get({ query: { prompt: "give me a random number between 1 and 1000, only return the number" } });
 
-    console.log(d);
+    // console.log(d);
 
     return (
         <div>
@@ -12,9 +12,9 @@ export default async function Home() {
                 LLM Uno Arena
             </h1>
             <p>
-                {data}
+                {/* {data}
                 <br />
-                {d?.randomNumber}
+                {d?.randomNumber} */}
             </p>
         </div>
     );

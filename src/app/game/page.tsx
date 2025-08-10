@@ -10,8 +10,8 @@ import { Card, Value } from 'uno-engine';
 
 
 export default function Home() {
-    const _discardedCard = useRef<HTMLImageElement>(null);
-    const _deckCard = useRef<HTMLImageElement>(null);
+    const _discardedCard = useRef<HTMLImageElement | null>(null);
+    const _deckCard = useRef<HTMLImageElement | null>(null);
     const [currentPlayerName, setCurrentPlayerName] = useState<string>("");
     const [hasdrawn, setHasDrawn] = useState(false);
     const [openColorsChoice, setOpenColorsChoices] = useState<boolean>(false);

@@ -8,7 +8,7 @@ import { Card, isWild, Value } from "uno-engine";
 
 export default function PlayerHand(
     { playerName, _discardedCard, setOpenColorsChoices, setWildValueCard }
-        : { playerName: string, _discardedCard: RefObject<HTMLImageElement>, setOpenColorsChoices: (value: boolean) => void, setWildValueCard: (value: Value.WILD | Value.WILD_DRAW_FOUR) => void }
+        : { playerName: string, _discardedCard: RefObject<HTMLImageElement> | null, setOpenColorsChoices: (value: boolean) => void, setWildValueCard: (value: Value.WILD | Value.WILD_DRAW_FOUR) => void }
 ) {
 
     const { game } = useStore();
@@ -56,11 +56,12 @@ export default function PlayerHand(
     }
 
     const handleWildCard = (card: Card) => {
-        if (!card) return;
-        if (![Value.WILD, Value.WILD_DRAW_FOUR].includes<Value>(card.value)) return;
-
-        setOpenColorsChoices(true);
-        setWildValueCard(card.value);
+        if (!card || !card.value) return;
+        if (card.value === Value.WILD_DRAW_FOUR || card.value === Value.WILD) {
+            setOpenColorsChoices(true);
+            setWildValueCard(card.value);
+            return;
+        }
     }
 
     return (
