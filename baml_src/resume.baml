@@ -5,7 +5,7 @@ class Resume {
 
 // Create a function to extract the resume from a string.
 function ExtractResume(resume: string) -> Resume {
-  client "ollama/Llama3"
+  client "OssGPT"
   prompt #"
     Extract from this content:
     {{ resume }}

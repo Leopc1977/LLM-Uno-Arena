@@ -2,6 +2,7 @@ import { Elysia, t } from 'elysia'
 import { b } from '../../../../baml_client'
 
 const app = new Elysia({ prefix: '/api' })
+    .state('chat', ["test", "test2"])
     .onRequest(({ request }) => {
         console.log(`[${request.method}] ${request.url}`)
     })
@@ -24,9 +25,9 @@ const app = new Elysia({ prefix: '/api' })
         })
         return response.json().then(data => data.message.content)
     })
-    .get('/baml', async ({ query }) => {
+    .get('/baml', async ({ query, store }) => {
         const { prompt } = query
-    
+
         const response = await b.ExtractResume(prompt);
         return response;
     })

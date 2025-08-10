@@ -75,11 +75,17 @@ retry_policy Exponential {
 }
 
 client<llm> Llama3 {
-  // Make sure to run 'ollama pull llama3'
-  // before using this client
   provider ollama
   options {
     base_url "http://localhost:11434/v1"
     model "llama3"
+  }
+}
+
+client<llm> OssGPT {
+  provider "openai-generic"
+  options {
+    base_url "http://localhost:1234/v1"
+    model "openai/gpt-oss-20b"
   }
 }
