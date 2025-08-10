@@ -159,7 +159,12 @@ export default function Home() {
                     style={{ width: 'auto', height: '100px', position: "absolute", top: "50%", left: "40%", translate: "-50% -50%" }}
                     priority
                     onClick={() => {
-                        game.draw(game.currentPlayer, 1);
+                        let canDraw = true;
+                        const player = game.getPlayer(currentPlayerName);
+                        player.hand.map((card: Card) => {
+                            if (card.matches(game.discardedCard)) canDraw = false
+                        });
+                        if (canDraw) game.draw(game.currentPlayer, 1);
                     }}
                 />
             </button>
