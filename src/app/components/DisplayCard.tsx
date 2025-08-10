@@ -7,9 +7,9 @@ import { RefObject, useEffect, useMemo, useRef, useState } from "react";
 let _zIndex: number = 1;
 
 export default function DisplayCard({ url, card, handleClickCard }
-    : { url: string, card: Card, handleClickCard: (_discardedCard: RefObject<HTMLImageElement>) => void }
+    : { url: string, card: Card, handleClickCard: (_discardedCard: RefObject<HTMLDivElement | null>) => void }
 ) {
-    const _displayCard = useRef<HTMLDivElement>(null);
+    const _displayCard = useRef<HTMLDivElement | null>(null);
     const currentZindex = useMemo<number>(() => (_zIndex++), []);
 
     const [animate, setAnimate] = useState(false);

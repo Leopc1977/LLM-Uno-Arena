@@ -41,7 +41,7 @@ export default function PlayerHand(
 
     if (!game || !player) return (<></>);
 
-    const handleClickCard = (card: Card, _displayCard: RefObject<HTMLImageElement>) => {
+    const handleClickCard = (card: Card, _displayCard: RefObject<HTMLDivElement | null>) => {
         if (!game) return;
         if (game.currentPlayer !== player) return;
         if (game && !card.matches(game.discardedCard)) return
