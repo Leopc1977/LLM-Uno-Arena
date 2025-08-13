@@ -7,12 +7,12 @@ const app = new Elysia({ prefix: '/api' })
         console.log(`[${request.method}] ${request.url}`)
     })
     .get('/', () => 'hello Next')
-    .get('/ollama', async ({ query }) => {
-        const { api, prompt } = query
+    .get('/ollama', async ({ query: { api, prompt} }) => {
         const response = await fetch('http://localhost:11434/api/chat', {
             method: 'POST',
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                model: api,
+                model: api.trim(),
                 messages: [
                     {
                         role: 'user',
@@ -23,12 +23,14 @@ const app = new Elysia({ prefix: '/api' })
                 temperature: 1.1
             })
         })
-        return response.json().then(data => data.message.content)
+        return response.json().then(data => {console.log(data);return data.message.content})
     })
-    .get('/baml', async ({ query, store }) => {
-        const { prompt } = query
-
+    .get('/baml', async ({ query }) => {
+        const { prompt } = query;
+        const start = performance.now();
         const response = await b.ExtractResume(prompt);
+        const end = performance.now();
+        console.log(`Temps écoulé : ${(end - start).toFixed(2)} ms`, `soit ${((end - start)/1000).toFixed(2)} s`);
         return response;
     })
     .post('/', ({ body }) => body, {

@@ -8,13 +8,13 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import ChooseColor from '../components/ChooseColor';
 import { Card, Value } from 'uno-engine';
 
+const RADIUS_RATIO = 0.27;
 
 export default function Home() {
-    const _discardedCard = useRef<HTMLImageElement | null>(null);
     const _deckCard = useRef<HTMLImageElement | null>(null);
     const [currentPlayerName, setCurrentPlayerName] = useState<string>("");
     const [hasdrawn, setHasDrawn] = useState(false);
-    const [openColorsChoice, setOpenColorsChoices] = useState<boolean>(false);
+    const [openColorsChoice, setOpenColorsChoice] = useState<boolean>(false);
     const [wildValueCard, setWildValueCard] = useState<Value.WILD | Value.WILD_DRAW_FOUR>(Value.WILD);
 
     const { game, initGame } = useStore()
@@ -25,7 +25,7 @@ export default function Home() {
     const [RADIUS, setRADIUS] = useState(0);
 
     useEffect(() => {
-        const updateRadius = () => setRADIUS(window.innerWidth * 0.28);
+        const updateRadius = () => setRADIUS(window.innerWidth * RADIUS_RATIO);
         updateRadius(); // calcul initial
         window.addEventListener('resize', updateRadius); // recalcul si on redimensionne
 
@@ -44,8 +44,9 @@ export default function Home() {
     useEffect(() => {
         if (!game) return;
 
-        const handleNextPlayer = () => {
-            setCurrentPlayerName(game.currentPlayer.name);
+        const handleNextPlayer = ({ player }) => {
+            setCurrentPlayerName(player.name);
+            console.log(player)
         };
 
         const handleDraw = () => {
@@ -101,8 +102,7 @@ export default function Home() {
 
     return (
         <div>
-            {game.players.map((player, index) => {
-                const playerName: string = player.name;
+            {players.map((playerName: string, index: number) => {
                 const isCurrentPlayer = playerName === currentPlayerName;
 
                 return (
@@ -110,31 +110,32 @@ export default function Home() {
                         key={index}
                         style={{
                             position: "absolute",
-                            width: "280px",
-                            height: "210px",
-                            background: "#fff",
-                            color: "#000",
-                            borderRadius: "10px",
-                            padding: "5px",
-                            boxShadow: "0 0 5px black",
+                            transform: `rotate(${360 / players.length * index}deg) translate(${RADIUS}px) rotate(${-360 / players.length * index}deg)`,
+                            translate: "-50% -50%",
                             top: "50%",
                             left: "50%",
-                            translate: "-50% -50%",
-                            display: "flex",
-                            flexDirection: "column",
-                            fontSize: "14px",
-                            transform: `rotate(${360 / players.length * index}deg) translate(${RADIUS}px) rotate(${-360 / players.length * index}deg)`,
-                            // overflow: "hidden",
-                            border: isCurrentPlayer ? "5px solid red" : "",
                         }}
                     >
                         <h1>{playerName}</h1>
-                        <PlayerHand playerName={playerName} _discardedCard={_discardedCard} setOpenColorsChoices={setOpenColorsChoices} setWildValueCard={setWildValueCard} />
+                        <div
+                            style={{
+                                width: "280px",
+                                height: "210px",
+                                background: "#fff",
+                                color: "#000",
+                                borderRadius: "10px",
+                                padding: "5px",
+                                fontSize: "14px",
+                                // overflow: "hidden",
+                                border: isCurrentPlayer ? "5px solid red" : "",
+                            }}
+                        >
+                            <PlayerHand playerName={playerName} setOpenColorsChoice={setOpenColorsChoice} setWildValueCard={setWildValueCard} />
+                        </div>
                     </div>
                 )
             })}
             <Image
-                ref={_discardedCard}
                 key={"discardedCard"}
                 src={getImageCardPath(game.discardedCard)}
                 alt={""}
@@ -143,7 +144,6 @@ export default function Home() {
                 sizes="100vw"
                 style={{ width: 'auto', height: '100px', position: "absolute", top: "50%", left: "50%", translate: "-50% -50%", zIndex: -1 }}
                 priority
-
             />
             <button
                 disabled={hasdrawn}
@@ -162,7 +162,7 @@ export default function Home() {
                         let canDraw = true;
                         const player = game.getPlayer(currentPlayerName);
                         player.hand.map((card: Card) => {
-                            if (card.matches(game.discardedCard)) canDraw = false
+                            if (card.matches(game.discardedCard)) canDraw = false;
                         });
                         if (canDraw) game.draw(game.currentPlayer, 1);
                     }}
@@ -184,7 +184,7 @@ export default function Home() {
 
                         card.color = color;
                         game.play(card);
-                        setOpenColorsChoices(false);
+                        setOpenColorsChoice(false);
                     }}
                 />
             )}

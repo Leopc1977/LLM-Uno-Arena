@@ -1,58 +1,3 @@
-// Learn more about clients at https://docs.boundaryml.com/docs/snippets/clients/overview
-
-client<llm> CustomGPT4o {
-  provider openai
-  options {
-    model "gpt-4o"
-    api_key env.OPENAI_API_KEY
-  }
-}
-
-client<llm> CustomGPT4oMini {
-  provider openai
-  retry_policy Exponential
-  options {
-    model "gpt-4o-mini"
-    api_key env.OPENAI_API_KEY
-  }
-}
-
-client<llm> CustomSonnet {
-  provider anthropic
-  options {
-    model "claude-3-5-sonnet-20241022"
-    api_key env.ANTHROPIC_API_KEY
-  }
-}
-
-
-client<llm> CustomHaiku {
-  provider anthropic
-  retry_policy Constant
-  options {
-    model "claude-3-haiku-20240307"
-    api_key env.ANTHROPIC_API_KEY
-  }
-}
-
-// https://docs.boundaryml.com/docs/snippets/clients/round-robin
-client<llm> CustomFast {
-  provider round-robin
-  options {
-    // This will alternate between the two clients
-    strategy [CustomGPT4oMini, CustomHaiku]
-  }
-}
-
-// https://docs.boundaryml.com/docs/snippets/clients/fallback
-client<llm> OpenaiFallback {
-  provider fallback
-  options {
-    // This will try the clients in order until one succeeds
-    strategy [CustomGPT4oMini, CustomGPT4oMini]
-  }
-}
-
 // https://docs.boundaryml.com/docs/snippets/clients/retry
 retry_policy Constant {
   max_retries 3
@@ -78,14 +23,34 @@ client<llm> Llama3 {
   provider ollama
   options {
     base_url "http://localhost:11434/v1"
-    model "llama3"
+    model "llama3.2"
   }
 }
 
-client<llm> OssGPT {
-  provider "openai-generic"
+client<llm> Gemma3 {
+  provider ollama
   options {
-    base_url "http://localhost:1234/v1"
-    model "openai/gpt-oss-20b"
+    base_url "http://localhost:11434/v1"
+    model "Gemma3"
+  }
+}
+
+client<llm> Deepseek {
+  provider ollama
+  options {
+    base_url "http://localhost:11434/v1"
+    model "deepseek-r1:1.5b"
+    think false
+    stream false
+  }
+}
+
+client<llm> Qwen3 {
+  provider ollama
+  options {
+    base_url "http://localhost:11434/v1"
+    model "qwen3:0.6b"
+    think false
+    stream false
   }
 }

@@ -4,13 +4,10 @@ import Image from "next/image";
 import { Card, Color, Value } from "uno-engine";
 import { RefObject, useEffect, useMemo, useRef, useState } from "react";
 
-let _zIndex: number = 1;
-
 export default function DisplayCard({ url, card, handleClickCard }
     : { url: string, card: Card, handleClickCard: (_discardedCard: RefObject<HTMLDivElement | null>) => void }
 ) {
     const _displayCard = useRef<HTMLDivElement | null>(null);
-    const currentZindex = useMemo<number>(() => (_zIndex++), []);
 
     const [animate, setAnimate] = useState(false);
 
@@ -23,7 +20,6 @@ export default function DisplayCard({ url, card, handleClickCard }
         transform: animate ? 'scale(1)' : 'scale(0)',
         opacity: animate ? 1 : 0,
         perspective: "1000px",
-        zIndex: currentZindex
     };
 
     return (
